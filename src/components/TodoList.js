@@ -28,6 +28,7 @@ const TodoList = () => {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
+  const [dueDate, setDueDate] = useState("");
 
   const getTodos = async () => {
     // Firestore 쿼리를 만듭니다.
@@ -68,12 +69,14 @@ const TodoList = () => {
     // Firestore 에 추가한 할 일을 저장합니다.
     const docRef = await addDoc(todoCollection, {
       text: input,
+      due: dueDate,
       completed: false,
     });
 
     // id 값을 Firestore 에 저장한 값으로 지정합니다.
-    setTodos([...todos, { id: docRef.id, text: input, completed: false }]);
+    setTodos([...todos, { id: docRef.id, text: input, due: dueDate, completed: false }]);
     setInput("");
+    setDueDate("");
   };
 
   // toggleTodo 함수는 체크박스를 눌러 할 일의 완료 상태를 변경하는 함수입니다.
@@ -129,6 +132,11 @@ const TodoList = () => {
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
+      <input
+       type="date"
+       value={dueDate}
+       onChange= {(e) => setDueDate(e.target.value)}
+       />
       {/* 할 일을 추가하는 버튼입니다. */}
       <div className="grid">
         <button
