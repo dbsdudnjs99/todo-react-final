@@ -4,6 +4,8 @@
   할 일 목록의 추가, 삭제, 완료 상태 변경 등의 기능을 구현하였습니다.
 */
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react"
+
 import TodoItem from "@/components/TodoItem";
 import styles from "@/styles/TodoList.module.css";
 
@@ -18,6 +20,7 @@ import {
   updateDoc,
   deleteDoc,
   orderBy,
+  where,
 } from "firebase/firestore";
 
 // DB의 todos 컬렉션 참조를 만듭니다. 컬렉션 사용시 잘못된 컬렉션 이름 사용을 방지합니다.
@@ -28,6 +31,9 @@ const TodoList = () => {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
+
+  const { data } = useSession();
+  
   const [dueDate, setDueDate] = useState("");
 
   const getTodos = async () => {
